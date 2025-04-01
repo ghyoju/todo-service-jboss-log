@@ -1,0 +1,62 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://todoservice.example.com/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             targetNamespace="http://todoservice.example.com/"
+             name="TodoService">
+    <types>
+        <xsd:schema targetNamespace="http://todoservice.example.com/">
+            <xsd:element name="addTodo" type="xsd:string"/>
+            <xsd:element name="addTodoResponse" type="xsd:string"/>
+            <xsd:element name="getTodo" type="xsd:long"/>
+            <xsd:complexType name="Todo">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:long"/>
+                    <xsd:element name="task" type="xsd:string"/>
+                    <xsd:element name="completed" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="getTodoResponse" type="tns:Todo"/>
+        </xsd:schema>
+    </types>
+    <message name="addTodoRequest">
+        <part name="task" element="tns:addTodo"/>
+    </message>
+    <message name="addTodoResponse">
+        <part name="response" element="tns:addTodoResponse"/>
+    </message>
+    <message name="getTodoRequest">
+        <part name="id" element="tns:getTodo"/>
+    </message>
+    <message name="getTodoResponse">
+        <part name="response" element="tns:getTodoResponse"/>
+    </message>
+    <portType name="TodoPortType">
+        <operation name="addTodo">
+            <input message="tns:addTodoRequest"/>
+            <output message="tns:addTodoResponse"/>
+        </operation>
+        <operation name="getTodo">
+            <input message="tns:getTodoRequest"/>
+            <output message="tns:getTodoResponse"/>
+        </operation>
+    </portType>
+    <binding name="TodoBinding" type="tns:TodoPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="addTodo">
+            <soap:operation soapAction="addTodo"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+        <operation name="getTodo">
+            <soap:operation soapAction="getTodo"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+    </binding>
+    <service name="TodoService">
+        <port name="TodoPort" binding="tns:TodoBinding">
+            <soap:address location="http://localhost:8080/todo-soap-service/TodoService"/>
+        </port>
+    </service>
+</definitions>
